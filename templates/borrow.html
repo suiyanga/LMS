@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://bootswatch.com/5/lux/bootstrap.min.css">
+    <title>Borrow a Book</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">THE LIBRARY</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <br>
+    <style>
+        .center-container {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; /* Adjust as needed */
+            height: 200px; /* Adjust as needed */
+         }             
+    </style>
+    <div class="container-fluid">
+      <div class="center-container">
+        <h1>Borrow a Book</h1>
+        <br>
+        <form action="/process_borrow/" method="POST">
+            {% csrf_token %}
+            <label for="book">Select a Book:</label>
+            <select id="book" name="book" required>
+                <option value="" disabled selected>Select a book</option>
+                {% for book in available_books %}
+                <option value="{{ book.id }}" data-price="{{ book.price }}">{{ book.title }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <p id="book-price">Price: $0</p> 
+            <br>
+            <br>
+            <!-- Payment form -->
+            <label for="payment">Payment Amount:</label>
+            <input type="number" id="payment" name="payment" required>
+            <br>
+            <br>
+            <label for="payment_method">Select Payment Method:</label>
+             <select id="payment_method" name="payment_method">
+             <option value="credit_card">Credit Card</option>
+             <option value="paypal">PayPal</option>
+             <option value="mpesa">M-Pesa</option>
+           </select>
+           <br>
+           <br>
+
+           <div id="mpesa_payment_form" style="display: none;">
+            <!-- Add M-Pesa payment fields here -->
+            <!-- For example, fields for phone number, PIN, and any other required details -->
+            <label for="mpesa_phone">M-Pesa Phone Number:</label>
+            <input type="text" id="mpesa_phone" name="mpesa_phone" required>
+            <br>
+            <br>
+            <label for="mpesa_pin">M-Pesa PIN:</label>
+            <input type="password" id="mpesa_pin" name="mpesa_pin" required>
+            <br>
+            <br>
+        </div>
+        
+        <!-- JavaScript to toggle the display of the M-Pesa payment form based on selection -->
+        <script>
+            document.getElementById("payment_method").addEventListener("change", function () {
+                const selectedPaymentMethod = this.value;
+                const mpesaPaymentForm = document.getElementById("mpesa_payment_form");
+        
+                if (selectedPaymentMethod === "mpesa") {
+                    mpesaPaymentForm.style.display = "block";
+                } else {
+                    mpesaPaymentForm.style.display = "none";
+                }
+            });
+        </script>
+
+            <button type="submit">Proceed to Payment</button>
+            <script>
+                document.getElementById("book").addEventListener("change", function () {
+                     const selectedBook = this.options[this.selectedIndex];
+                     const bookPrice = selectedBook.getAttribute("data-price");
+                     document.getElementById("book-price").textContent = "Price: $" + bookPrice;});
+                    </script>
+                    <script src="https://js.stripe.com/v3/"></script>
+        </div>
+    </div> 
+
+</body>
+</html>

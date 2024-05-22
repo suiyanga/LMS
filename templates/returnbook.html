@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://bootswatch.com/5/lux/bootstrap.min.css">
+    <title>Select Book to Return</title>
+    <!-- Include any necessary CSS styles or Bootstrap if needed -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">THE LIBRARY</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <br>
+    <style>
+        .center-container {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px; 
+            height: 200px; 
+         }             
+    </style>
+   <div class="container-fluid">
+    <div class="center-container">
+    <h1>Select Book to Return</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="book_to_return">Choose a book to return:</label>
+        <select name="book_to_return" id="book_to_return">
+            {% for book in borrowed_books %}
+                <option value="{{ book.id }}">{{ book.title }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Return</button>
+    </form>
+
+    <a href="{% url 'available_books' %}">Back to Available Books</a>
+</div>
+</div>
+</body>
+</html>
